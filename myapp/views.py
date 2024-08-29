@@ -5,19 +5,22 @@ from .forms import CreateUserForm
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
+@login_required(login_url='login')
 def home(request):
     return render(request, "home.html")
 
-def todos(request):
-    items = TodoItem.objects.all()
-    return render(request, "todos.html", {"todos": items})
-
+@login_required(login_url='login')
 def checkers(request):
     return render(request, "checkers.html")
 
 def registerPage(request):
+    if request.user.is_authenticated: 
+        return redirect('home')
+    
     form = CreateUserForm()
 
     if request.method == "POST":
@@ -33,6 +36,8 @@ def registerPage(request):
     return render(request, "register.html", context)
 
 def loginPage(request):
+    if request.user.is_authenticated: 
+        return redirect('home')
 
     if request.method == "POST":
         username = request.POST.get('username')
@@ -49,6 +54,7 @@ def loginPage(request):
     context = {}
     return render(request, "login.html", context)
 
+@login_required(login_url='login')
 def logOutUser(request):
     logout(request)
     return redirect('login')
