@@ -1,0 +1,903 @@
+{% extends "base.html" %} 
+
+{% block title %} Checkers {% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkers Game</title>
+
+
+    <!--CSS Section------- -->
+    <style>
+          
+    
+        body {
+            margin: 0px;
+            background-color: #42342c;
+            font-family: Jazz LET, fantasy;
+            font-variant: small-caps;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: auto;
+            
+            border: 2vh;
+            border-radius: 20px;
+            outline: 25px solid #42342c;
+            outline-offset: -10px;
+            
+        }
+        
+        .top-side{
+          margin: -15px;
+          width: auto;
+          height: 85%;
+          border: 15px solid #42342c;
+          border-radius: 20px;
+          padding: 3px;
+          padding-bottom: 12px;
+          box-shadow: inset 0px 0px 5px 2px rgba(92, 73, 61);
+          background-color: #8a7263;
+        }
+        
+        .down-side{
+          margin: -15px;
+          width: auto;
+          height: 9.5%;
+          border: 15px solid #42342c;
+          border-radius: 20px;
+          box-shadow: inset 0px 0px 5px 2px rgba(92, 73, 61);
+          background-color: #b08b72;
+          
+        }
+        
+        .space-side{
+          /*Space...*/
+          margin: 0.5vh;
+        }
+
+        .title {
+            padding: 0px;
+            color: #292421;
+            font-size: 8vh;
+            font-weight: 900;
+            text-shadow: 2px 2px white;
+            text-align: right;
+            margin-bottom: 20px;
+            
+        }
+
+        .main-container {
+            width: 100%;
+            overflow: hidden;
+            overflow-x: auto;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        /*boxes*/
+        .left-container {
+            width: 50%;
+            display: inline-block;
+            vertical-align: top;
+
+        }
+
+        /*Board(•‿•)*/
+        table {
+            border-collapse: collapse;
+            width: 63vh;
+            height: 63vh;
+            box-shadow: 0px 0px 15px 5px rgba(92, 73, 61);
+        }
+
+        .board-container {
+          margin: 5px;
+            width: 63vh;
+            height: 63vh;
+            display: inline-block;
+            vertical-align: top;
+            border: 15px solid #3d3128;
+            border-radius: 5px;
+            background-color: #261b15;
+            box-shadow: 0px 0px 5px 3px rgba(92, 73, 61);
+        }
+
+        td {
+            width: 50px;
+            height: 45px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 24px;
+            cursor: pointer;
+            border: 1px;
+            border-radius: 2px;
+        }
+        /*board*/
+        .black {
+            background-color: #42342c;
+        }
+
+        .white {
+            background-color: #967763;
+        }
+        /*kings*/
+        .red-king {
+            color: blue;
+        }
+
+        .black-king {
+            color: white;
+        }
+
+        .selected {
+            background-color: #261b15;
+        }
+        /*Player Names*/
+        .player-name1 {
+            color: white;
+            background-color: #1b2c47;
+            border: 10px;
+            border-radius: 8px;
+            padding-top: 5px;
+            padding-left: 5px;
+            height: 25px;
+            margin: -15px;
+            margin-left: 10vh;
+            margin-right: 2vh;
+            margin-bottom: 10px;
+        }
+        .player-name2 {
+            color: white;
+            background-color: #3d3d3d;
+            border: 10px;
+            border-radius: 8px;
+            padding-top: 5px;
+            padding-left: 5px;
+            height: 25px;
+            margin-top: -15px;
+            margin-left: 10vh;
+            margin-right: 2vh;
+        }
+        
+        /*Player sections*/
+        .left-organizer{
+          margin: 5px;
+          background-color: #967763;
+          border: 15px solid #42342c;
+          border-radius: 10px;
+          box-shadow: 0px 0px 5px 3px rgba(92, 73, 61);
+          width: 37vh;
+          height: 62vh;
+          
+        }
+        /*Player 1 area*/
+        .left-organizer-top{
+          margin:5px;
+          
+        }
+        /*Player 2 area*/
+        .left-organizer-bottom{
+          margin: 5px;
+          
+        }
+        /*Captured container....*/
+        .box {
+            margin-top: 5vh;
+            margin-left: 1vh;
+            background-color: #4364ba;
+            border: 10px solid #1b2c47;
+            border-radius: 15px;
+            padding-left: 1vh;
+            padding-top: 1vh;
+            padding-bottom: 5vh;
+            height: 3vh;
+            margin-right: 6vh;
+        }
+        .box2 {
+            margin-top: 3vh;
+            margin-left: 1vh;
+            background-color: #b7b9bd;
+            border: 10px solid #3d3d3d;
+            border-radius: 15px;
+            padding-left: 1vh;
+            padding-top: 1vh;
+            padding-bottom: 5vh;
+            height: 8vh;
+            margin-right: 6vh;
+        }
+        
+        .captured-container {
+            
+            margin-top: -4.7vh;
+            width: 32vh;
+            height: 13vh;
+            background-color: #a38471;
+            border: 10px solid #42342c;
+            border-radius: 15px;
+        }
+        
+       
+        /*Start Menu...............*/
+        .background-container{
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          
+          width: 999vh;
+          height: 100vh;
+          background-color: black;
+          opacity: 50%;
+          top: 0px;
+          right: 0px;
+          z-index: 1000;
+          transition: opacity 0.2s;
+        }
+        .menu-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Exactly center */
+            
+            border: 20px solid #3d3128;
+            border-radius: 10px;
+            background-color: #a38471;
+            box-shadow: inset 0px 0px 5px 2px rgba(92, 73, 61);
+            
+            padding: 20px;
+            width: 75%; 
+            height: 30vh;
+            text-align: center;
+            z-index: 1000;
+            transition: opacity 0.2s;
+        }
+        
+        
+        #player-name1{
+        }
+        
+        #player-name2{
+        }
+        
+        
+        #player1{
+          color: white;
+          font-weight: 900;
+        }
+        
+        #player2{
+          color: white;
+          font-weight: 900;
+        }
+
+        h1 {
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 5vh;
+            color: #42372c;
+            font-weight: 900;
+        }
+        
+        h3 {
+          position: fixed;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #54473a;
+            font-weight: 900;
+            top: 20.5vh;
+            left: 50vh;
+
+            
+        }
+        
+        /*checkbox ===============>*/
+         input[type="checkbox"] {
+            display: 0;
+            cursor: pointer;
+        }
+        .checkbox{
+        position: fixed;
+        top: 21.3vh;
+        left: 45vh;
+        background-color: #4f3e35;
+        border: none;
+        padding-left:0px;
+        padding-right:1px;
+        border-radius: 4px;
+        cursor: pointer;
+        
+        }
+        .checkmark{
+          position: fixed;
+
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input[type="text"] {
+            background-color: #2b231e;
+            box-shadow: 0px 0px 5px 2px rgba(92, 73, 61);
+            font-variant: small-caps;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 0px;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 5vh;
+            margin-left: 65px;
+            margin-right: 65px;
+            font-variant: small-caps;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #42342c;
+            box-shadow: 0px 0px 5px 2px rgba(92, 73, 61);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #29201b;
+        }
+        /*Double jump*/
+        
+
+        /*Notifications Here.................*/
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 10px;
+            background-color: #2b201b;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 1.5s;
+            font-size: 14px;
+        }
+        
+                
+                /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+        }
+        
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        
+    </style>
+    <!--End of CSS Section -->
+
+
+</head>
+
+<body>
+
+
+    <!--HTML body/base section -->
+     <div class="top-side">
+      <!--Tittle... -->
+      <div class="title">
+        <center>
+            Checkers Game
+        </center>
+    </div>
+      
+      <div class="main-container">
+        <!--Boxes -->
+        <div class="left-container">
+          <!--(・∀・) -->
+          
+          <div class="left-organizer">
+            <div class="left-organizer-top">
+              <!-- box 1...-->
+              <div class="box">
+                <!--Counter -->
+                Red Pieces: <span id="redCapturedCount">0</span><br>
+                Red King Pieces: <span id="redKingCapturedCount">0</span><br>
+
+              </div>
+            <!--Visual -->
+                <div id="blackCapturedContainer" class="captured-container"></div>
+                <div class="player-name1" id="player-name1"></div>
+            </div>
+            
+            
+            <div class="left-organizer-bottom">
+              <!--box2... -->
+              <div class="box2">
+                <!--Counter -->
+                Black Pieces: <span id="blackCapturedCount">0</span><br>
+                Black King Pieces: <span id="blackKingCapturedCount">0</span><br>
+              </div>
+            <!--Visual -->
+                <div id="redCapturedContainer" class="captured-container"></div>
+                <div class="player-name2" id="player-name2"></div>
+            </div>
+            
+          </div>
+                
+                
+            <!--Start Menu -->
+            <div class="menu-complete">
+              <div class="background-container" id="background-container"> </div>
+              <div class="menu-container" id="menu-container">
+                <h1>Choose Your Name..</h1>
+                <form id="players">
+                    <input type="text" id="player1" placeholder="Player 1" required>
+                    <input type="text" id="player2" placeholder="Player 2" required>
+                    <div class="checkmark">
+                      <label class=checkbox >
+                      <input type="checkbox" id="specialMode" onclick="specialModeFunction()"/>
+                    </label>
+                    <h3>Allow double jumps?</h3>
+                    </div>
+                    
+                    
+                    
+                    <!--Space -->
+                    <button type="submit">Start..</button>
+                    
+                </form>
+            </div>
+            </div>
+            
+            <!--Notifications...... -->
+            <div class="notification-container" id="notification-container"></div>
+            <!--END of Start Menu -->
+        </div>
+        <!--Board -->
+        <div class="board-container">
+            <table id="board"></table>
+        </div>
+    </div>
+    </div>
+    
+      <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <!-- This is where the dynamic content will be displayed -->
+            <p id="modalMessage">This is a modal popup!</p>
+        </div>
+    </div>
+
+
+
+    <!--Space... -->
+    <div class="space-side">
+      
+    </div>
+    
+<!-- Little menu in "down side" =============>     -->
+    <div class="down-side">
+      <div class="how-to-play">
+        
+      </div>
+    </div>
+    
+
+    <!--Java Section --------- -->
+    <script>
+        const boardSize = 8;
+        const board = document.getElementById('board');
+        
+        let selectedPiece = null;
+        let currentPlayer = 'red';
+        
+        let doubleJumpAvailable = false;
+        let isFirstMove = true;
+        let pieceFocus = false;
+        
+        let redCaptured = 0;
+        let blackCaptured = 0;
+        let redKingCaptured = 0;
+        let blackKingCaptured = 0;
+        
+        let doubleJumpEnabled = false;
+        
+        const pieces = {
+        red: { symbol: '&#128309;', count: redCaptured, king: '&#9812'},
+        black: { symbol: '&#x26AA;', count: blackCaptured, king: '&#9812' },
+        };
+
+        //board
+        function createBoard() {
+            for (let row = 0; row < boardSize; row++) {
+                const tr = document.createElement('tr');
+                for (let col = 0; col < boardSize; col++) {
+                    const td = document.createElement('td');
+                    td.id = `${row}-${col}`;
+                    td.className = (row + col) % 2 === 0 ? 'white' : 'black';
+
+                    if (td.className === 'black') {
+                        //Edited                =========>
+                        if (row < 3) 
+                        {
+                        td.innerHTML = pieces.red.symbol; // Red piece
+                        td.classList.add('red-piece');
+                        
+                        }else if (row > 4) 
+                        {
+                        td.innerHTML = pieces.black.symbol; // Black piece
+                        td.classList.add('black-piece');
+                        
+                        }
+                    }
+
+                    td.addEventListener('click', () => handleCellClick(row, col));
+                    tr.appendChild(td);
+                }
+                board.appendChild(tr);
+            }
+        }
+        
+        function handleCellClick(row, col) {
+            console.log("handleCellClick called");
+            console.log(selectedPiece);
+            const cell = document.getElementById(`${row}-${col}`);
+            //const switchPiece = ((cell.classList.contains(`${currentPlayer}-piece`)) || (cell.classList.contains(`${currentPlayer}-king`))) && ((row != selectedPiece[0]) || (col != selectedPiece[1]));
+            
+            if (selectedPiece) {
+              console.log("there is a selected piece");
+                const [selectedRow, selectedCol] = selectedPiece;
+                if (isValidMove(selectedRow, selectedCol, row, col)) {
+                    movePiece(selectedRow, selectedCol, row, col);
+                } 
+                else if (pieceFocus) return;
+                else {
+                    clearSelection();
+                }
+            } else if (!pieceFocus && ((cell.classList.contains(`${currentPlayer}-piece`)) || (cell.classList.contains(`${currentPlayer}-king`)))) {
+                selectedPiece = [row, col];
+                cell.classList.add('selected');
+                console.log("new selected piece:");
+                console.log(selectedPiece);
+            }
+          
+        }
+
+
+      function isValidMove(fromRow, fromCol, toRow, toCol, takePiece = true) {
+            const fromCell = document.getElementById(`${fromRow}-${fromCol}`);
+            const toCell = document.getElementById(`${toRow}-${toCol}`);
+            const isKing = fromCell.classList.contains(`${currentPlayer}-king`);
+
+            if (toCell.className !== 'black' || toCell.innerHTML) {
+                return false;
+            }
+
+            const rowDiff = toRow - fromRow;
+            const colDiff = Math.abs(toCol - fromCol);
+            const direction = currentPlayer === 'red' ? 1 : -1;
+
+            if (rowDiff === direction && colDiff === 1 && isFirstMove && !doubleJumpAvailable) {
+                doubleJumpAvailable = false;
+                return true;
+            }
+           
+            if (isKing === true && (colDiff === 1 || colDiff === -1) && isFirstMove && !doubleJumpAvailable) {
+                doubleJumpAvailable = false;
+                return true;
+            }
+
+            if (rowDiff === 2 * direction && colDiff === 2) {
+                const middleRow = (fromRow + toRow) / 2;
+                const middleCol = (fromCol + toCol) / 2;
+                const middleCell = document.getElementById(`${middleRow}-${middleCol}`);
+
+                if (middleCell.classList.contains(currentPlayer === 'red' ? 'black-piece' : 'red-piece')) {
+                    if (takePiece) {
+                      middleCell.innerHTML = '';
+                      middleCell.classList.remove('red-piece', 'black-piece');
+                      if (currentPlayer === 'red') {blackCaptured++;}
+                      else {redCaptured++;}
+                    }
+                   
+                    doubleJumpAvailable = canJump(toRow, toCol);
+                     
+                    return true;
+                }
+               
+                if (middleCell.classList.contains(currentPlayer === 'red' ? 'black-king' : 'red-king')) {
+                    if (takePiece) {
+                      middleCell.innerHTML = '';
+                      middleCell.classList.remove('red-king', 'black-king');
+                      if (currentPlayer === 'red') {blackKingCaptured++;}
+                      else {redKingCaptured++;}
+                    }
+                   
+                    doubleJumpAvailable = canJump(toRow, toCol);
+                     
+                    return true;
+                }
+            }
+           
+            if (isKing === true && (colDiff === 2 || colDiff === -2)) {
+                const middleRow = (fromRow + toRow) / 2;
+                const middleCol = (fromCol + toCol) / 2;
+                const middleCell = document.getElementById(`${middleRow}-${middleCol}`);
+
+                if (middleCell.classList.contains(currentPlayer === 'red' ? 'black-piece' : 'red-piece')) {
+                    if (takePiece) {
+                      middleCell.innerHTML = '';
+                      middleCell.classList.remove('red-piece', 'black-piece');
+                      if (currentPlayer === 'red') {blackCaptured++;}
+                      else {redCaptured++;}
+                    }
+                   
+                    doubleJumpAvailable = canJump(toRow, toCol);
+                     
+                    return true;
+                }
+               
+                if (middleCell.classList.contains(currentPlayer === 'red' ? 'black-king' : 'red-king')) {
+                    if (takePiece) {
+                      middleCell.innerHTML = '';
+                      middleCell.classList.remove('red-king', 'black-king');
+                      if (currentPlayer === 'red') {blackKingCaptured++;}
+                      else {redKingCaptured++;}
+                    }
+                    
+                    doubleJumpAvailable = canJump(toRow, toCol);
+                     
+                    return true;
+                }
+            }
+           
+            return false;
+        }
+
+        function movePiece(fromRow, fromCol, toRow, toCol) {
+            const fromCell = document.getElementById(`${fromRow}-${fromCol}`);
+            const toCell = document.getElementById(`${toRow}-${toCol}`);
+            const isKing = fromCell.classList.contains(`${currentPlayer}-king`);
+           
+            const topLeftCell = document.getElementById(`${toRow-1}-${toCol-1}`);
+            const topRightCell = document.getElementById(`${toRow-1}-${toCol+1}`);
+            const bottomLeftCell = document.getElementById(`${toRow+1}-${toCol-1}`);
+            const bottomRightCell = document.getElementById(`${toRow+1}-${toCol+1}`);
+         
+            toCell.innerHTML = fromCell.innerHTML;
+            if (isKing === true) {toCell.classList.add(`${currentPlayer}-king`);}
+            if (isKing === false) {toCell.classList.add(`${currentPlayer}-piece`);}
+            fromCell.innerHTML = '';
+            fromCell.classList.remove('selected', `${currentPlayer}-piece`, `${currentPlayer}-king`);
+
+            if ((currentPlayer === 'red' && toRow === boardSize - 1) || (currentPlayer === 'black' && toRow === 0)) {
+                toCell.classList.remove('red-piece', 'black-piece');
+                if (currentPlayer === 'red') {
+                  toCell.innerHTML = pieces.red.king; // red king
+                  toCell.classList.add('red-king');
+                }
+                if (currentPlayer === 'black') {
+                  toCell.innerHTML = pieces.black.king; // black king
+                  toCell.classList.add('black-king');
+                }
+            }
+            
+            if (doubleJumpAvailable) {
+                console.log(selectedPiece);
+              
+                doubleJumpAvailable = false;
+                
+                selectedPiece = [toRow, toCol];
+                document.getElementById(`${toRow}-${toCol}`).classList.add('selected');
+
+                console.log(selectedPiece);
+                
+                return;
+            }
+            else {switchPlayer();}
+        }
+
+        function canJump(row, col) {
+          
+            if (doubleJumpEnabled === false) return false;
+            
+            const directions = [
+                [2, 2], [2, -2], [-2, 2], [-2, -2]
+            ];
+
+            for (const [rowOffset, colOffset] of directions) {
+                const newRow = row + rowOffset;
+                const newCol = col + colOffset;
+                if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize) {
+                    if (isValidMove(row, col, newRow, newCol, false)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+      function clearSelection() {
+          if (selectedPiece) {
+              const [row, col] = selectedPiece;
+              const cell = document.getElementById(`${row}-${col}`);
+              cell.classList.remove('selected');
+          }
+          selectedPiece = null;
+      }
+    
+     //Game Over ................  
+      function gameOver() {
+        if (blackCaptured >= 12) {
+          showModal('Black Wins!');
+        }
+        if (redCaptured >= 12) {
+          showModal('Red Wins!');
+        }
+      }
+           
+
+      function switchPlayer() {
+        gameOver();
+        currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
+        document.getElementById('blackCapturedCount').innerHTML = blackCaptured;
+        document.getElementById('redCapturedCount').innerHTML = redCaptured;
+        document.getElementById('blackKingCapturedCount').innerHTML = blackKingCaptured;
+        document.getElementById('redKingCapturedCount').innerHTML = redKingCaptured;
+        clearSelection();
+      }
+
+//menu (base code)................
+        document.getElementById('players').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const player1 = document.getElementById('player1').value;
+            const player2 = document.getElementById('player2').value;
+
+            if (player1 && player2) 
+            {
+                playerName1(`\n player 1: ${player1}`);
+                playerName2(`\n player 2: ${player2}`);
+                hideMenu();
+                setTimeout(() =>
+                    Notification(`Starting GAME! \n player 1: ${player1}\n player 2: ${player2}`)
+                    , 250);
+                    
+                
+                // start....
+            } else 
+            {
+                Notification('Please, Put Your Names..');
+            }
+        });
+    //No menu               ..........
+        function hideMenu()
+        {
+            const menuContainer2 = document.getElementById('background-container');
+            menuContainer2.style.opacity = '0';
+            const menuContainer = document.getElementById('menu-container');
+            menuContainer.style.opacity = '0';
+            
+            
+            
+            setTimeout(() => 
+            {
+                menuContainer.style.display = 'none';
+                menuContainer2.style.display = 'none';
+            },
+            1000);
+            
+            
+        }
+        
+    //Show Notifications                ................
+        function Notification(message) 
+        {
+            const notificationContainer = document.getElementById('notification-container');
+            notificationContainer.textContent = message;
+            notificationContainer.style.opacity = '1';
+
+            setTimeout(() => 
+            {
+                notificationContainer.style.opacity = '0';
+            }, 
+            2500);
+        }
+
+        //other options..
+
+        //END OF THE CODE...
+      function playerName1(name1)
+      {
+        const namesContainer1 = document.getElementById('player-name1');
+        namesContainer1.innerHTML = name1;
+      }
+      
+      function playerName2(name2)
+      {
+        const namesContainer2 = document.getElementById('player-name2');
+        namesContainer2.innerHTML = name2;
+      }
+      
+      function specialModeFunction() {
+            var checkBox = document.getElementById("specialMode");
+          
+            if (checkBox.checked == true){
+              doubleJumpEnabled = true;
+            } else {
+              doubleJumpEnabled = false;
+            }
+        }
+
+          // Get the modal
+      var modal = document.getElementById("myModal");
+      
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+      
+      // Get the element where the message will be displayed
+      var modalMessage = document.getElementById("modalMessage");
+      
+      // Function to show the modal with dynamic content
+      function showModal(message) {
+          // Set the message inside the modal
+          modalMessage.textContent = message;
+          
+          // Show the modal
+          modal.style.display = "block";
+      }
+      
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+
+        
+        createBoard();
+    </script>
+    <!--End of Java Section ----->
+
+
+</body>
+
+{% endblock %}
+
