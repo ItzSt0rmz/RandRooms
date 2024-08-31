@@ -2,9 +2,13 @@
 
 <style>
   .hello-msg{
-    font-size: 100 px;
-    margin-right: 20 px;
+    margin-right: 60px;
   }
+
+  .logOutButton{
+    margin-left: 20px;
+  }
+
 </style>
 
 <html lang="en">
@@ -12,16 +16,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {% block title %}
-        Django App
-      {% endblock %}
+        RandRooms
     </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"  rel="stylesheet" />
   </head>
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">{% block appName %} Django App {% endblock %}</a>
+      <a class="navbar-brand" href="#">RandRooms</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -38,7 +40,8 @@
       </div>
 
       <span class="hello-msg">Hello, {{request.user}}</span>
-      <span><a href="{% url 'logout' %}">Logout</a></span>
+      <span><a class = "logoutButton" href="{% url 'logout' %}">Logout</a></span>
+
     </nav>
     <div class="container">{% block content %} {% endblock %}</div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

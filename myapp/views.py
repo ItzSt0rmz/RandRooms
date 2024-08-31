@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import TodoItem
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateUserForm
+from .forms import CreateUserForm, RosterUploadForm
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
@@ -58,3 +57,20 @@ def loginPage(request):
 def logOutUser(request):
     logout(request)
     return redirect('login')
+
+@login_required(login_url='login')
+def fileCollectionPage(request):
+
+    form = RosterUploadForm()
+
+    if (request.method == "POST"):
+        form = RosterUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            form.user = form.request.user
+
+            return redirect('home')
+
+    context = {'form': form}
+    return render(request, "filecollection.html", context)

@@ -8,7 +8,7 @@ class TodoItem(models.Model):
     complete = models.BooleanField(default=False)
 
 class ClassAssignment(models.Model):
-    user = models.OneToOneField(User, null = True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     class1File = models.FileField(name="Class 1 File", blank=True)
     class2File = models.FileField(name="Class 2 File", blank=True)
     class3File = models.FileField(name="Class 3 File", blank=True)
